@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-gray-50 antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
+  }
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-primary-700 font-semibold py-2.5 px-5 rounded-xl border-2 border-primary-200 transition-all duration-200 hover:border-primary-400;
+  }
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 shadow-sm;
+  }
+  .btn-warning {
+    @apply bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 shadow-sm;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:shadow-md;
+  }
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-white/50 p-5;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all duration-200 text-sm;
+  }
+  .label-field {
+    @apply block text-sm font-medium text-gray-600 mb-1.5;
+  }
+  .page-title {
+    @apply text-2xl font-display font-bold text-gray-900;
+  }
+  .section-title {
+    @apply text-lg font-display font-semibold text-gray-800;
+  }
+  .stat-card {
+    @apply bg-gradient-to-br rounded-2xl p-5 text-white shadow-lg;
+  }
+  .tab-active {
+    @apply bg-primary-600 text-white shadow-md;
+  }
+  .tab-inactive {
+    @apply bg-white text-gray-600 hover:bg-gray-100;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Animasi halus */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Accessibility overrides: enlarge small font sizes for elderly users */
+.text-\[9px\] {
+  font-size: 11.5px !important;
+}
+.text-\[10px\] {
+  font-size: 12.5px !important;
+}
+.text-\[11px\] {
+  font-size: 13.5px !important;
+}
+.text-\[12px\] {
+  font-size: 14.5px !important;
+}
+.text-\[13px\] {
+  font-size: 15px !important;
+}
+.text-\[15px\] {
+  font-size: 16.5px !important;
+}

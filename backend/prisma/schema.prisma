@@ -1,0 +1,298 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Petani {
+  id                String  @id
+  nama              String
+  nik               String
+  noHp              String
+  email             String
+  alamat            String
+  kecamatan         String
+  kabupaten         String
+  provinsi          String
+  fotoProfil        String
+  fotoKtp           String
+  statusVerifikasi  String  // 'pending' | 'approved' | 'rejected' | 'survey'
+  tanggalDaftar     String
+  tanggalVerifikasi String?
+  catatanVerifikasi String?
+  gudangTujuanId    String?
+  gudangTujuanNama  String?
+  password          String
+  role              String  @default("petani") // 'admin' | 'kepala_petani' | 'petani'
+  kepalaPetaniId    String? // ID kepala petani yang membawahi (null jika role bukan 'petani')
+}
+
+model Lahan {
+  id               String @id
+  petaniId         String
+  namaLahan        String
+  latitude         Float
+  longitude        Float
+  alamat           String
+  luasHektar       Float
+  jenisLahan       String // 'sawah' | 'ladang' | 'kebun' | 'greenhouse'
+  kecamatan        String
+  kabupaten        String
+  statusVerifikasi String // 'pending' | 'approved' | 'rejected' | 'survey'
+  fotoLahan        String
+}
+
+model TanamanAktif {
+  id                String  @id
+  petaniId          String
+  lahanId           String
+  komoditasId       String
+  komoditasNama     String
+  tanggalTanam      String
+  estimasiPanen     String
+  estimasiHasilKg   Float
+  fotoTanaman       String
+  statusVerifikasi  String  // 'pending' | 'approved' | 'rejected' | 'survey'
+  catatanInspeksi   String?
+  fotoInspeksi      String?
+  latitudeInspeksi  Float?
+  longitudeInspeksi Float?
+  catatan           String?
+  luasLahanDigunakan Float?
+  jarakTanam          Float?
+  kebutuhanBibit     Int?
+}
+
+model Komoditas {
+  id                      String @id
+  nama                    String
+  kategori                String // 'sayuran' | 'buah' | 'umbi' | 'biji-bijian' | 'rempah'
+  satuan                  String
+  deskripsi               String
+  gambar                  String
+  hargaSaatIni            Float
+  hargaSebelumnya         Float
+  lastUpdate              String
+  jumlahPetaniAktif       Int
+  totalEstimasiProduksiKg Float
+  estimasiBulanPanen      String
+  kebutuhanBulananKg      Float
+  supplyStatus            String // 'kurang' | 'cukup' | 'berlebih'
+  umurPanenHari           Int?
+}
+
+model HargaKomoditas {
+  id              String  @id
+  komoditasId     String
+  komoditasNama   String
+  harga           Float
+  wilayah         String
+  tanggalBerlaku  String
+  tanggalBerakhir String?
+  dibuatOleh      String
+}
+
+model HistoriHarga {
+  id          String @id
+  komoditasId String
+  harga       Float
+  tanggal     String
+}
+
+model PengajuanJual {
+  id                 String  @id
+  petaniId           String
+  petaniNama         String
+  komoditasId        String
+  komoditasNama      String
+  beratEstimasiKg    Float
+  tanggalSiapPickup  String
+  fotoPanen          String
+  status             String  // 'pending' | 'approved' | 'rejected' | 'survey' | 'pickup_dijadwalkan' | 'selesai'
+  tanggalPengajuan   String
+  catatanAdmin       String?
+  metodePembayaran   String? // 'TDF' | 'Cash'
+  tanamanAktifId     String?
+  lahanId            String?
+  lahanNama          String?
+  hargaAcuanKg       Float?
+  estimasiPendapatan Float?
+  catatanPetani      String?
+  gudangTujuanId     String?
+  gudangTujuanNama   String?
+}
+
+model Pickup {
+  id              String  @id
+  pengajuanJualId String
+  petaniId        String
+  petaniNama      String
+  komoditasNama   String
+  alamatPickup    String
+  tanggalPickup   String
+  driverNama      String
+  driverNoHp      String
+  armada          String
+  platNomor       String
+  status          String  // 'dijadwalkan' | 'berangkat' | 'hampir_tiba' | 'sudah_sampai' | 'proses_timbang' | 'selesai'
+  beratTimbangKg  Float?
+  fotoTimbang     String?
+  fotoPanen       String?
+  latitude        Float?
+  longitude       Float?
+  waktuBerangkat  String?
+  waktuTiba       String?
+  waktuSelesai    String?
+}
+
+model Pembayaran {
+  id            String  @id
+  pickupId      String
+  petaniId      String
+  petaniNama    String
+  komoditasNama String
+  beratKg       Float
+  hargaPerKg    Float
+  totalBayar    Float
+  tanggalPickup String
+  tanggalBayar  String?
+  status        String  // 'menunggu' | 'diproses' | 'dibayar' | 'gagal'
+  metodeBayar   String  // 'TDF' | 'Cash'
+  nomorInvoice  String
+  buktiTransfer String?
+  dibuatOleh    String?
+}
+
+model Tender {
+  id              String @id
+  komoditasId     String
+  komoditasNama   String
+  kebutuhanKg     Float
+  terpenuhinKg    Float
+  periodePanen    String
+  tanggalBerakhir String
+  status          String // 'aktif' | 'terpenuhi' | 'kadaluarsa'
+  deskripsi       String
+  hargaPerKg      Float
+}
+
+model TenderPetani {
+  id             String  @id
+  tenderId       String
+  petaniId       String
+  petaniNama     String
+  kesanggupanKg  Float
+  statusApproval String  // 'pending' | 'approved' | 'rejected' | 'survey'
+  tanggalDaftar  String
+  catatanAdmin   String?
+}
+
+model ArtikelEdukasi {
+  id             String  @id
+  judul          String
+  isi            String
+  gambar         String
+  kategori       String
+  tanggalPublish String
+  penulis        String
+  tipe           String  // 'artikel' | 'video'
+  urlVideo       String?
+}
+
+model ProdukBibitPupuk {
+  id           String  @id
+  nama         String
+  tipe         String  // 'bibit' | 'pupuk'
+  harga        Float
+  stok         Int
+  satuan       String
+  deskripsi    String
+  gambar       String
+  subsidi      Boolean
+  diskonPersen Int?
+}
+
+model QualityControl {
+  id               String  @id
+  pickupId         String
+  petaniNama       String
+  komoditasNama    String
+  beratDiterimaKg  Float
+  grade            String  // 'A' | 'B' | 'C' | 'reject'
+  catatanKerusakan String
+  tanggalQC        String
+  petugasQC        String
+  fotoQC           String?
+}
+
+model Notifikasi {
+  id      String  @id
+  judul   String
+  pesan   String
+  tanggal String
+  dibaca  Boolean
+  tipe    String  // 'info' | 'success' | 'warning' | 'danger'
+}
+
+model RekomendasiTanam {
+  id                String @id
+  komoditasId       String
+  komoditasNama     String
+  kategori          String
+  alasan            String
+  prioritas         String // 'tinggi' | 'sedang' | 'rendah'
+  kebutuhanKg       Float
+  supplySekarangKg  Float
+  selisihKg         Float
+  estimasiHargaJual Float
+}
+
+model JejakPanen {
+  id            String               @id
+  petaniId      String
+  pickupId      String
+  komoditasNama String
+  emoji         String
+  beratAwalKg   Float
+  gradeAwal     String
+  statusSaatIni String               // 'qc_selesai' | 'masuk_cuci' | 'proses_packing' | 'siap_distribusi' | 'didistribusikan' | 'diterima_toko'
+  timeline      JejakPanenTimeline[]
+}
+
+model JejakPanenTimeline {
+  id           String     @id @default(uuid())
+  jejakPanenId String
+  status       String
+  tanggal      String
+  lokasi       String
+  keterangan   String?
+  jejakPanen   JejakPanen @relation(fields: [jejakPanenId], references: [id], onDelete: Cascade)
+}
+
+model BukuKas {
+  id            String  @id
+  tanggal       String
+  tipeTransaksi String  // 'Uang Masuk' | 'Uang Keluar'
+  kategori      String  // 'Pencairan Dana BUMD' | 'Pembayaran Petani' | 'Operasional' | 'Lainnya'
+  nominal       Float
+  saldoSebelumnya Float
+  saldoAkhir    Float
+  keterangan    String
+  referensiId   String?
+}
+
+model PurchaseOrder {
+  id                  String @id
+  nomorReq            String
+  penerimaKontrak     String
+  operatorLogistik    String
+  tanggalPengajuan    String
+  estimasiPengantaran String
+  status              String // 'PENDING' | 'PROSES' | 'SELESAI' | 'BATAL'
+  itemsJson           String // JSON string containing array of items [{ komoditasNama, volumeKg, hargaPerKg, totalHarga }]
+}
+

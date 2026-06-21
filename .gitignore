@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Databases
+backend/dev.db
+*.db
+*.db-journal
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Local history/caches
+.vite/
