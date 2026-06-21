@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Phone, MapPin, Search, ChevronRight, X, Sprout, Landmark, Calendar, Scale, Shield } from 'lucide-react';
+import { ArrowLeft, Users, Phone, MapPin, Search, ChevronRight, X, Calendar, Shield } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import StatusBadge from '../../components/StatusBadge';
-import { formatRupiah } from '../../data/dummy';
 
 const KelompokPage: React.FC = () => {
   const navigate = useNavigate();
